@@ -176,6 +176,15 @@ Load the module by adding the following line to the top of the main NGINX config
 load_module modules/ngx_otel_module.so;
 ```
 
+# Docker Images
+
+The Docker images are based on those created for Nginx OpenTracing, and are available in both Alpine and Debian flavours. An example of commands to build both Alpine and Debian based Docker images for Linux on amd64 are below:  
+
+```
+docker buildx build . -t nginx-otel-debian --platform=linux/amd64 --build-arg="BUILD_OS=debian" --load
+docker buildx build . -t nginx-otel-alpine --platform=linux/amd64 --build-arg="BUILD_OS=alpine" --load
+```
+
 # Community
 - Our Slack channel [#nginx-opentelemetry-module](https://nginxcommunity.slack.com/archives/C05NMNAQDU6), is the go-to place to start asking questions and sharing your thoughts.
 

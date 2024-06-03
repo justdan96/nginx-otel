@@ -64,7 +64,7 @@ FROM nginx:${BUILD_NGINX_VERSION}-bookworm as build-nginx-debian
 RUN echo "deb-src [signed-by=/etc/apt/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/debian/ bookworm nginx" >> /etc/apt/sources.list.d/nginx.list \
     && apt-get update \
     && apt-get build-dep -y nginx \
-    && apt-get install -y wget git libc-ares-dev libc-ares2
+    && apt-get install -y cmake git libc-ares-dev libc-ares2 libssl-dev wget
 
 
 ### Base build image for alpine
@@ -73,7 +73,10 @@ RUN apk add --no-cache \
     build-base \
     c-ares \
     c-ares-dev \
+    cmake \
     git \
+    linux-headers \
+    openssl-dev \
     pcre2-dev \
     wget \
     zlib-dev
@@ -81,14 +84,6 @@ RUN apk add --no-cache \
 
 ### Build nginx-otel modules
 FROM build-nginx-${BUILD_OS} as build-nginx
-
-ENV CMAKE_VERSION 3.22.2
-RUN wget -q -O cmake-linux.sh "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-$(arch).sh" \
-    && sh cmake-linux.sh -- --skip-license --prefix=/usr \
-    && rm cmake-linux.sh
-
-# XX_CC_PREFER_STATIC_LINKER prefers ld to lld in ppc64le and 386.
-ENV XX_CC_PREFER_STATIC_LINKER=1
 
 COPY . /src
 
