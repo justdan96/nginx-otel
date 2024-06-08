@@ -20,7 +20,7 @@ if(NGX_OTEL_FETCH_DEPS)
     include(FetchContent)
 
     # backport a patch from a later version of abseil to avoid errors on MUSL
-    set(abseil_patch git apply ${CMAKE_CURRENT_SOURCE_DIR}/abseil-off64_t.patch)
+    set(abseil_patch git apply ${CMAKE_CURRENT_SOURCE_DIR}/patches/abseil-off64_t.patch)
 
     FetchContent_Declare(
         grpc
