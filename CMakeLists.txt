@@ -19,12 +19,18 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 if(NGX_OTEL_FETCH_DEPS)
     include(FetchContent)
 
+    # backport a patch from a later version of abseil to avoid errors on MUSL
+    set(abseil_patch git apply ${CMAKE_CURRENT_SOURCE_DIR}/patches/abseil-off64_t.patch)
+
     FetchContent_Declare(
         grpc
-        GIT_REPOSITORY https://github.com/grpc/grpc
-        GIT_TAG        e241f37befe7ba4688effd84bfbf99b0f681a2f7 # v1.49.4
-        GIT_SUBMODULES third_party/protobuf third_party/abseil-cpp third_party/re2
-        GIT_SHALLOW    ON)
+        GIT_REPOSITORY      https://github.com/grpc/grpc
+        GIT_TAG             e241f37befe7ba4688effd84bfbf99b0f681a2f7 # v1.49.4
+        GIT_SUBMODULES      third_party/protobuf third_party/abseil-cpp third_party/re2
+        GIT_SHALLOW         ON
+        PATCH_COMMAND       ${abseil_patch}
+        UPDATE_DISCONNECTED 1
+    )
 
     set(gRPC_USE_PROTO_LITE ON  CACHE INTERNAL "")
     set(gRPC_INSTALL        OFF CACHE INTERNAL "")
