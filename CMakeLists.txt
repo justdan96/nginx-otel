@@ -19,8 +19,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 if(NGX_OTEL_FETCH_DEPS)
     include(FetchContent)
 
-    # backport a patch from a later version of abseil to avoid errors on MUSL
-    set(abseil_patch git apply ${CMAKE_CURRENT_SOURCE_DIR}/patches/abseil-off64_t.patch)
+    # apply patches for correct operation of MUSL
+    set(abseil_patch git apply ${CMAKE_CURRENT_SOURCE_DIR}/patches/absl-musl.patch)
 
     FetchContent_Declare(
         grpc
