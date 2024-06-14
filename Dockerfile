@@ -64,7 +64,9 @@ FROM nginx:${BUILD_NGINX_VERSION}-bookworm as build-nginx-debian
 RUN echo "deb-src [signed-by=/etc/apt/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/debian/ bookworm nginx" >> /etc/apt/sources.list.d/nginx.list \
     && apt-get update \
     && apt-get build-dep -y nginx \
-    && apt-get install -y cmake git libc-ares-dev libc-ares2 libssl-dev wget
+    && apt-get install -y cmake git git-lfs libc-ares-dev libc-ares2 libssl-dev wget \
+    && git config --global http.version HTTP/1.1 && git config --global http.postBuffer 524288000 \
+    && git config --global http.lowSpeedLimit 0 && git config --global http.lowSpeedTime 999999
 
 
 ### Base build image for alpine
@@ -75,11 +77,14 @@ RUN apk add --no-cache \
     c-ares-dev \
     cmake \
     git \
+    git-lfs \
     linux-headers \
     openssl-dev \
     pcre2-dev \
     wget \
-    zlib-dev
+    zlib-dev \
+    && git config --global http.version HTTP/1.1 && git config --global http.postBuffer 524288000 \
+    && git config --global http.lowSpeedLimit 0 && git config --global http.lowSpeedTime 999999
 
 
 ### Build nginx-otel modules
